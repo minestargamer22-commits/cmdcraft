@@ -9,22 +9,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
+      - name: Clone Sol Client
+        run: git clone https://github.com/Sol-Client/Client sol-client
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      
-      - name: Grant execute permission
-        run: chmod +x gradlew
-      
+
+      - name: Patch names
+        run: |
+          cd sol-client
+          find src -type f \( -name "*.java" -o -name "*.json" -o -name "*.lang" -o -name "*.properties" -o -name "*.gradle" -o -name "*.yml" -o -name "*.txt" -o -name "*.xml" \) | xargs sed -i 's/Sol Client/CMD Client/g; s/sol_client/cmd_client/g; s/sol-client/cmd-client/g; s/SolClient/CmdClient/g'
+
       - name: Build
-        run: ./gradlew build
-      
-      - name: Upload artifact
+        run: |
+          cd sol-client
+          chmod +x gradlew
+          ./gradlew build --no-daemon
+
+      - name: Upload JAR
         uses: actions/upload-artifact@v3
         with:
-          name: cmd-client
-          path: build/libs/*.jar
+          name: CMD-Client
+          path: sol-client/build/libs/*.jar
