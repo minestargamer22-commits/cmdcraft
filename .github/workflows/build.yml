@@ -30,7 +30,7 @@ jobs:
           ./gradlew build --no-daemon
 
       - name: Upload JAR
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: CMD-Client
           path: sol-client/build/libs/*.jar
